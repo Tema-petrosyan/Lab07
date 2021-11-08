@@ -8,25 +8,18 @@ using std::cin;
 using std::string;
 using std::vector;
 
-struct furnitureItem{
-    size_t id = 0;
+struct furnitureItem {
+    int id;
+
     string name;
     string color;
-    double width = 0;
-    double length = 0;
-    double height = 0;
-};
 
-//bool isNextValue(int spaceIndex){
-//    switch (spaceIndex) {
-//        default: return false;
-//        case 1: return true;
-//        case 2: return true;
-//        case 5: return true;
-//        case 8: return true;
-//        
-//    }
-//}
+    double width;
+    double length;
+    double height;
+
+    bool isCorrect = true;
+};
 
 int main() {
     string itemInfoString;
@@ -35,6 +28,8 @@ int main() {
     vector<furnitureItem> ItemsArray;
     int spaceCounter = 0;
     int itemsCounter = 0;
+    short int ruinedObjectsCount = 0;
+
 
     SetConsoleOutputCP(1251);
     SetConsoleCP(1251);
@@ -54,9 +49,12 @@ int main() {
                 tempChar = itemInfoString.at(i + k);
             }while(tempChar != ')');
 
-            ItemsArray.at(itemsCounter - 1).id = std::stoi(temp);
+            int idFromString = std::stoi(temp);
+            if(idFromString < 0) ItemsArray.at(itemsCounter - 1).isCorrect = false;
 
-            tempChar = ' '; temp = "";
+            ItemsArray.at(itemsCounter - 1).id = idFromString;
+
+            temp = "";
         }
 
         if(spaceCounter == 2 && itemInfoString.at(i) == ' '){
@@ -69,7 +67,7 @@ int main() {
 
             ItemsArray.at(itemsCounter - 1).name = temp;
 
-            tempChar = ' '; temp = "";
+            temp = "";
         }
 
         if(spaceCounter == 5 && itemInfoString.at(i) == ' '){
@@ -82,12 +80,72 @@ int main() {
 
             ItemsArray.at(itemsCounter - 1).color = temp;
 
-            tempChar = ' '; temp = "";
+            temp = "";
+        }
+
+        if(spaceCounter == 8 && itemInfoString.at(i) == ' '){
+            tempChar = itemInfoString.at(i + k);
+            do{
+                temp += tempChar;
+                k++;
+                tempChar = itemInfoString.at(i + k);
+            }while(tempChar != ' ');
+
+            double widthFromstring = std::stod(temp);
+            if(widthFromstring < 0) ItemsArray.at(itemsCounter - 1).isCorrect = false;
+
+            ItemsArray.at(itemsCounter - 1).width = widthFromstring;
+
+            temp = "";
+        }
+
+        if(spaceCounter == 12 && itemInfoString.at(i) == ' '){
+            tempChar = itemInfoString.at(i + k);
+            do{
+                temp += tempChar;
+                k++;
+                tempChar = itemInfoString.at(i + k);
+            }while(tempChar != ' ');
+
+            double lengthFromString = std::stod(temp);
+            if(lengthFromString < 0) ItemsArray.at(itemsCounter - 1).isCorrect = false;
+
+            ItemsArray.at(itemsCounter - 1).length = lengthFromString;
+
+            temp = "";
+        }
+
+        if(spaceCounter == 16 && itemInfoString.at(i) == ' '){
+            tempChar = itemInfoString.at(i + k);
+            do{
+                temp += tempChar;
+                k++;
+                tempChar = itemInfoString.at(i + k);
+            }while(tempChar != ' ');
+
+            double heightFromString = std::stod(temp);
+            if(heightFromString < 0) ItemsArray.at(itemsCounter - 1).isCorrect = false;
+
+            ItemsArray.at(itemsCounter - 1).height = heightFromString;
+
+            temp = "";
         }
 
         k = 1;
+        if(!ItemsArray.at(itemsCounter - 1).isCorrect) ruinedObjectsCount++;
     }
 
-    cout << ItemsArray.at(itemsCounter - 1).id << ItemsArray.at(itemsCounter - 1).name << ItemsArray.at(itemsCounter - 1).color << '\n';
+
+    //шаблон для вывода инфы об объекте
+    cout << "<--------------------->\n";
+    cout << "Id: " << ItemsArray.at(itemsCounter - 1).id << "\n";
+    cout << "Model: " << ItemsArray.at(itemsCounter - 1).name << '\n';
+    cout << "Color: " << ItemsArray.at(itemsCounter - 1).color << '\n';
+    cout << "Width: " << ItemsArray.at(itemsCounter - 1).width << '\n';
+    cout << "Length: " << ItemsArray.at(itemsCounter - 1).length << '\n';
+    cout << "Height: " << ItemsArray.at(itemsCounter - 1).height << '\n';
+    cout << "Correct: " << ItemsArray.at(itemsCounter - 1).isCorrect << '\n';
+
+
 
 }
