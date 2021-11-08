@@ -45,7 +45,7 @@ int main() {
 
     int k = 1;
     for(auto & i : ItemsArray){
-        getline(cin, itemInfoString);
+        getline(cin, itemInfoString); //где то здесь творится пиздец
 
         for(int j = 0; j < itemInfoString.length(); j++){
             if(itemInfoString.at(j) == ' ') spaceCounter++;
