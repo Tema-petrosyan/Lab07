@@ -39,14 +39,14 @@ int main() {
 
     cout << "Введите количество записей которые хотите обработать.\n k - ";
     cin >> itemArraySize;
-    ItemsArray.resize(itemArraySize);
+    ItemsArray.resize(itemArraySize + 1);
 
-    cout << "Вводите записи в формате:\n\t _id)_name_цвет_-_color;_ширина_-_width_см;_длина_-_length_см;_высота_-_height_см";
+    cout << "Вводите записи в формате:\n\t _id)_name_цвет_-_color;_ширина_-_width_см;_длина_-_length_см;_высота_-_height_см\n";
 
+    int k = 1;
     for(auto & i : ItemsArray){
         getline(cin, itemInfoString);
 
-        int k = 1;
         for(int j = 0; j < itemInfoString.length(); j++){
             if(itemInfoString.at(j) == ' ') spaceCounter++;
 
@@ -74,9 +74,6 @@ int main() {
                     tempChar = itemInfoString.at(j + k);
                 }while(tempChar != ' ');
 
-                for(char & m : temp){
-                    m = std::toupper(m);
-                }
 
                 i.name = temp;
 
@@ -156,11 +153,14 @@ int main() {
         double a = i.width, b = i.length, c = i.height;
         double currentVolume = a * b * c;
 
-        if(currentVolume > maxShelfVolume && i.name == "ШКАФ" && i.isCorrect)
+        if(currentVolume > maxShelfVolume && i.name == "Шкаф" && i.isCorrect){
             maxVolumeShelfString += i.id + ' ';
+            maxShelfVolume = currentVolume;
+        }
     }
 
-    cout << maxVolumeShelfString << '\n';
+    if(maxShelfVolume == 0) cout << "В введённых записях не было ни одного шкафа.\n";
+    else cout << maxVolumeShelfString << '\n';
 
     if(ruinedObjectsCount != 0){
         char confirm;
