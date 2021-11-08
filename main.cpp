@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <windows.h>
 
 using std::cout;
 using std::cin;
@@ -35,12 +36,14 @@ int main() {
     int spaceCounter = 0;
     int itemsCounter = 0;
 
+    SetConsoleOutputCP(1251);
+
     bool nextValueFlag = false;
     int k = 1;
     getline(cin, itemInfoString);
     for(int i = 0; i < itemInfoString.length(); i++){
         if(itemInfoString.at(i) == ' ') spaceCounter++;
-        if(spaceCounter == 1){
+        if(spaceCounter == 1 && itemInfoString.at(i) == ' '){
             itemsCounter++;
             ItemsArray.resize(itemsCounter);
 
@@ -56,19 +59,20 @@ int main() {
             tempChar = ' '; temp = "";
         }
 
-//        if(spaceCounter == 2){
-//            tempChar = itemInfoString.at(i + k);
-//            while(tempChar != ' '){
-//                temp += tempChar;
-//                k++;
-//                tempChar = itemInfoString.at(i + k);
-//            }
-//
-//            ItemsArray.at(itemsCounter - 1).name = temp;
-//
-//            tempChar = ' '; temp = "";
-//        }
-//        k = 1;
+        if(spaceCounter == 2 && itemInfoString.at(i) == ' '){
+            tempChar = itemInfoString.at(i + k);
+            do{
+                temp += tempChar;
+                k++;
+                tempChar = itemInfoString.at(i + k);
+            }while(tempChar != ' ');
+
+            ItemsArray.at(itemsCounter - 1).name = temp;
+
+            tempChar = ' '; temp = "";
+        }
+
+        k = 1;
     }
 
     cout << ItemsArray.at(itemsCounter).id << ItemsArray.at(itemsCounter).name << '\n';
