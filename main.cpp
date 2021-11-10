@@ -22,130 +22,49 @@ struct furnitureItem {
 };
 
 int main() {
-    string itemInfoString;
-    string temp;
-    char tempChar;
+    string temp[17];
     vector<furnitureItem> ItemsArray;
     int itemArraySize;
-    int spaceCounter = 0;
     short int ruinedObjectsCount = 0;
 
 
     SetConsoleOutputCP(1251);
     SetConsoleCP(1251);
+    setlocale(LC_ALL, "");
 
     //так же впихнуть обработку с файла
 
 
     cout << "¬ведите количество записей которые хотите обработать.\n k - ";
     cin >> itemArraySize;
-    ItemsArray.resize(itemArraySize + 1);
+    ItemsArray.resize(itemArraySize);
 
     cout << "¬водите записи в формате:\n\t _id)_name_цвет_-_color;_ширина_-_width_см;_длина_-_length_см;_высота_-_height_см\n";
 
-    int k = 1;
     for(auto & i : ItemsArray){
-        getline(cin, itemInfoString); //где то здесь творитс€ пиздец
+        for(auto & j : temp) cin >> j;
 
-        for(int j = 0; j < itemInfoString.length(); j++){
-            if(itemInfoString.at(j) == ' ') spaceCounter++;
+        temp[0].erase(temp[0].find(')'), 1);
+        if(std::stoi(temp[0]) < 0) i.isCorrect = false;
+        i.id = temp[0];
 
-            if(spaceCounter == 1 && itemInfoString.at(j) == ' '){
-                tempChar = itemInfoString.at(j + k);
-                do{
-                    temp += tempChar;
-                    k++;
-                    tempChar = itemInfoString.at(j + k);
-                }while(tempChar != ')');
+        i.name = temp[1];
 
-                int idFromString = std::stoi(temp);
-                if(idFromString < 0) i.isCorrect = false;
+        temp[4].erase(temp[4].find(';'), 1);
+        i.color = temp[4];
 
-                i.id = temp;
+        double tempWidth = std::stod(temp[7]);
+        if(tempWidth < 0) i.isCorrect = false;
+        i.width = tempWidth;
 
-                temp = "";
-            }
+        if(std::stod(temp[11]) < 0) i.isCorrect = false;
+        i.length = std::stod(temp[11]);
 
-            if(spaceCounter == 2 && itemInfoString.at(j) == ' '){
-                tempChar = itemInfoString.at(j + k);
-                do{
-                    temp += tempChar;
-                    k++;
-                    tempChar = itemInfoString.at(j + k);
-                }while(tempChar != ' ');
+        if(std::stod(temp[15]) < 0) i.isCorrect = false;
+        i.height = std::stod(temp[15]);
 
-
-                i.name = temp;
-
-                temp = "";
-            }
-
-            if(spaceCounter == 5 && itemInfoString.at(j) == ' '){
-                tempChar = itemInfoString.at(j + k);
-                do{
-                    temp += tempChar;
-                    k++;
-                    tempChar = itemInfoString.at(j + k);
-                }while(tempChar != ';');
-
-                i.color = temp;
-
-                temp = "";
-            }
-
-            if(spaceCounter == 8 && itemInfoString.at(j) == ' '){
-                tempChar = itemInfoString.at(j + k);
-                do{
-                    temp += tempChar;
-                    k++;
-                    tempChar = itemInfoString.at(j + k);
-                }while(tempChar != ' ');
-
-                double widthFromstring = std::stod(temp);
-                if(widthFromstring < 0) i.isCorrect = false;
-
-                i.width = widthFromstring;
-
-                temp = "";
-            }
-
-            if(spaceCounter == 12 && itemInfoString.at(j) == ' '){
-                tempChar = itemInfoString.at(j + k);
-                do{
-                    temp += tempChar;
-                    k++;
-                    tempChar = itemInfoString.at(j + k);
-                }while(tempChar != ' ');
-
-                double lengthFromString = std::stod(temp);
-                if(lengthFromString < 0) i.isCorrect = false;
-
-                i.length = lengthFromString;
-
-                temp = "";
-            }
-
-            if(spaceCounter == 16 && itemInfoString.at(j) == ' '){
-                tempChar = itemInfoString.at(j + k);
-                do{
-                    temp += tempChar;
-                    k++;
-                    tempChar = itemInfoString.at(j + k);
-                }while(tempChar != ' ');
-
-                double heightFromString = std::stod(temp);
-                if(heightFromString < 0) i.isCorrect = false;
-
-                i.height = heightFromString;
-
-                temp = "";
-            }
-
-            k = 1;
-            if(!i.isCorrect) ruinedObjectsCount++;
-        }
+        if(!i.isCorrect) ruinedObjectsCount++;
     }
-
 
     double maxShelfVolume = 0;
     string maxVolumeShelfString;
@@ -169,7 +88,7 @@ int main() {
         if(confirm == 'Y' || confirm == 'y')
             for(auto & i : ItemsArray)
                 if(!i.isCorrect){
-                    cout << "<--------------------->\n";
+                    cout << "<------------------->\n";
                     cout << "Id: " << i.id << "\n";
                     cout << "Model: " << i.name << '\n';
                     cout << "Color: " << i.color << '\n';
