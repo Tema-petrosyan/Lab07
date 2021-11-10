@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <windows.h>
+#include <sstream>
 
 using std::cout;
 using std::cin;
@@ -21,19 +22,26 @@ struct furnitureItem {
     bool isCorrect = true;
 };
 
+double str_to_double(const std::string& str)
+{
+    std::stringstream ss;
+    ss << str;
+
+    double result;
+    ss >> result;
+
+    return result;
+}
+
 int main() {
     string temp[17];
     vector<furnitureItem> ItemsArray;
     int itemArraySize;
     short int ruinedObjectsCount = 0;
 
-
     SetConsoleOutputCP(1251);
     SetConsoleCP(1251);
     setlocale(LC_ALL, "");
-
-    //так же впихнуть обработку с файла
-
 
     cout << "Введите количество записей которые хотите обработать.\n k - ";
     cin >> itemArraySize;
@@ -53,15 +61,17 @@ int main() {
         temp[4].erase(temp[4].find(';'), 1);
         i.color = temp[4];
 
-        double tempWidth = std::stod(temp[7]);
+        double tempWidth = str_to_double(temp[7]);
         if(tempWidth < 0) i.isCorrect = false;
         i.width = tempWidth;
 
-        if(std::stod(temp[11]) < 0) i.isCorrect = false;
-        i.length = std::stod(temp[11]);
+        double tempLength = str_to_double(temp[11]);
+        if(tempLength < 0) i.isCorrect = false;
+        i.length = tempLength;
 
-        if(std::stod(temp[15]) < 0) i.isCorrect = false;
-        i.height = std::stod(temp[15]);
+        double tempHeight = str_to_double(temp[15]);
+        if(tempHeight < 0) i.isCorrect = false;
+        i.height = tempHeight;
 
         if(!i.isCorrect) ruinedObjectsCount++;
     }
@@ -69,17 +79,23 @@ int main() {
     double maxShelfVolume = 0;
     string maxVolumeShelfString;
     for(auto & i : ItemsArray){
-        double a = i.width, b = i.length, c = i.height;
-        double currentVolume = a * b * c;
+        if(i.isCorrect){
+            double a = i.width, b = i.length, c = i.height;
+            double currentVolume = a * b * c;
 
-        if(currentVolume > maxShelfVolume && i.name == "Шкаф" && i.isCorrect){
-            maxVolumeShelfString += i.id + ' ';
-            maxShelfVolume = currentVolume;
+            if(currentVolume >= maxShelfVolume && i.name == "Шкаф"){
+                maxVolumeShelfString.string::append(i.id + ' ');
+                maxShelfVolume = currentVolume;
+            }
         }
+
     }
 
     if(maxShelfVolume == 0) cout << "В введённых записях не было ни одного шкафа.\n";
-    else cout << maxVolumeShelfString << '\n';
+    else {
+        cout << "\nId шкафов с наибольшим объёмом: ";
+        cout << maxVolumeShelfString << '\n';
+    }
 
     if(ruinedObjectsCount != 0){
         char confirm;
