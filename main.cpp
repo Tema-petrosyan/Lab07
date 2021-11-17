@@ -19,6 +19,8 @@ struct furnitureItem {
     double length;
     double height;
 
+    double volume;
+
     bool isCorrect = true;
 };
 
@@ -38,6 +40,7 @@ int main() {
     vector<furnitureItem> ItemsArray;
     int itemArraySize;
     short int ruinedObjectsCount = 0;
+    double maxShelfVolume = 0;
 
     SetConsoleOutputCP(1251);
     SetConsoleCP(1251);
@@ -73,25 +76,21 @@ int main() {
         if(tempHeight < 0) i.isCorrect = false;
         i.height = tempHeight;
 
+        i.volume = i.length * i.width * i.height;
+        if(i.isCorrect && i.volume > maxShelfVolume && i.name == "Шкаф") maxShelfVolume = i.volume;
         if(!i.isCorrect) ruinedObjectsCount++;
     }
 
-    double maxShelfVolume = 0;
+
     string maxVolumeShelfString;
     for(auto & i : ItemsArray){
-        if(i.isCorrect){
-            double a = i.width, b = i.length, c = i.height;
-            double currentVolume = a * b * c;
-
-            if(currentVolume >= maxShelfVolume && i.name == "Шкаф"){
+        if(i.isCorrect && i.name == "Шкаф"){
+            if(i.volume == maxShelfVolume)
                 maxVolumeShelfString.string::append(i.id + ' ');
-                maxShelfVolume = currentVolume;
-            }
         }
-
     }
 
-    if(maxShelfVolume == 0) cout << "В введённых записях не было ни одного шкафа.\n";
+    if(maxVolumeShelfString.empty()) cout << "В введённых записях не было ни одного шкафа.\n";
     else {
         cout << "\nId шкафов с наибольшим объёмом: ";
         cout << maxVolumeShelfString << '\n';
